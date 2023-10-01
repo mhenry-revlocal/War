@@ -29,15 +29,9 @@ class GameController(object):
         self.collecting_step = 1
         pass
     def act(self, events):
-        #player_plane = next(sprite for sprite in self.sprites if type(sprite) is PlayerPlane)
-        #if player_plane.lives < 0:
-        #    self.game_over = True
         for event in events:
             if event.type == pygame.MOUSEBUTTONUP:
                 pos = pygame.mouse.get_pos()
-
-                # get a list of all sprites that are under the mouse cursor
-                #clicked_sprites = [s for s in sprites if s.rect.collidepoint(pos)]
         if self.dealing:
             deal_speed = 10
             if len(self.deck.cards) > 0 and not self.dealing_card:
@@ -68,28 +62,33 @@ class GameController(object):
             self.battle_step += 1
             if self.battle_step == 20:
                 self.display_battle = True
-            if self.battle_step > 400:
+            elif self.battle_step == 45:
                 if self.player1_battle_card.value > self.player2_battle_card.value:
                     self.battle_winner = 1
-                    self.display_battle = False
-                    self.collecting_step = 1
-                    self.collecting = True
-                    self.player1_cards.insert(0, self.player1_battle_card)
-                    self.player1_cards.insert(0, self.player2_battle_card)
                 elif self.player1_battle_card.value < self.player2_battle_card.value:
                     self.battle_winner = 2
-                    self.display_battle = False
-                    self.collecting_step = 1
-                    self.collecting = True
-                    self.player2_cards.insert(0, self.player2_battle_card)
-                    self.player2_cards.insert(0, self.player1_battle_card)
                 else:
                     self.war = True
-
+                    self.battle = False
+            if self.battle_step > 200:
+                self.display_battle = False
+                self.collecting_step = 1
+                self.collecting = True
                 self.battle = False
+                self.battle_step = 0
 
-        if self.collecting and self.collecting_step < 60:
+        if self.collecting and self.collecting_step < 40:
             self.collecting_step += 1
+        elif self.collecting:
+            if self.battle_winner == 1:
+                self.player1_cards.insert(0, self.player1_battle_card)
+                self.player1_cards.insert(0, self.player2_battle_card)
+            if self.battle_winner == 2:
+                self.player2_cards.insert(0, self.player2_battle_card)
+                self.player2_cards.insert(0, self.player1_battle_card)
+            self.collecting = False
+            self.battle = True
+            self.battle_winner = None
 
         
     def draw(self, game_display, height, width):
@@ -124,26 +123,26 @@ class GameController(object):
             increment = self.battle_step * 6
             game_display.blit(self.cardback_image, (self.player1_deck_pos[0], self.player1_deck_pos[1] + increment))
             game_display.blit(self.cardback_image, (self.player2_deck_pos[0], self.player2_deck_pos[1] - increment))
-
        
         if self.display_battle:
             game_display.blit(self.player1_battle_card.image, self.player1_battle_pos)       
             game_display.blit(self.player2_battle_card.image, self.player2_battle_pos)       
 
         if self.collecting:
-            increment = -(self.collecting_step * 6)
+            increment = -(self.collecting_step * 9)
             if self.battle_winner == 2:
                 increment = -(increment)
-            game_display.blit(self.cardback_image, (self.player1_battle_pos[0], self.player1_battle_pos[1] + increment))      
-            game_display.blit(self.cardback_image, (self.player2_battle_pos[0], self.player2_battle_pos[1] + increment))      
+            game_display.blit(self.player1_battle_card.image, (self.player1_battle_pos[0], self.player1_battle_pos[1] + increment))      
+            game_display.blit(self.player2_battle_card.image, (self.player2_battle_pos[0], self.player2_battle_pos[1] + increment))      
 
         text = pygame.font.Font('freesansbold.ttf', 20)
-        text_surf = text.render('Player 1', True, (0, 0, 0))
+        text_surf = text.render(f'Player 1 ({len(self.player1_cards)})', True, (0, 0, 0))
         game_display.blit(text_surf, (5, 5))
-        text_surf = text.render('Player 2', True, (0, 0, 0))
+        text_surf = text.render(f'Player 2 ({len(self.player2_cards)})', True, (0, 0, 0))
         game_display.blit(text_surf, (5, height - 20))
 
         status = "Battle"
+        color = (0, 0, 0)
         if self.shuffling:
             status = "Shuffling"
         elif self.dealing:
@@ -151,9 +150,10 @@ class GameController(object):
         elif self.battle_winner:
             status = f"Player {self.battle_winner} wins"
         elif self.war:
+            color = (255, 0, 0)
             status = "War!"
             
-        text_surf = text.render(status, True, (0, 0, 0))
+        text_surf = text.render(status, True, color)
         game_display.blit(text_surf, (5, (height / 2) - 20))
     def reset(self):
         pass
