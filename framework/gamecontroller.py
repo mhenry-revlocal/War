@@ -74,7 +74,7 @@ class GameController(object):
                     self.paused = not self.paused
         if not self.paused:
             if self.dealing:
-                deal_speed = 1
+                deal_speed = 10
                 if len(self.deck.cards) > 0 and not self.dealing_card:
                     self.dealing_card = self.deck.cards.pop()
                 elif self.dealing_card:
@@ -94,8 +94,6 @@ class GameController(object):
                 else:
                     self.dealing = False
                     self.battle = True
-                    self.player1_cards.sort(key=lambda x: x.value)
-                    self.player2_cards.sort(key=lambda x: x.value)
 
             if self.battle:
                 if self.battle_step == 0:
@@ -270,6 +268,10 @@ class GameController(object):
         text = pygame.font.Font('freesansbold.ttf', 20)
         text_surf = text.render(f'Player 1 ({len(self.player1_cards)})', True, (0, 0, 0))
         game_display.blit(text_surf, (5, 5))
+        text_surf = text.render(f'p = pause', True, (0, 0, 0))
+        game_display.blit(text_surf, (5, 30))
+        text_surf = text.render(f'r = reset', True, (0, 0, 0))
+        game_display.blit(text_surf, (5, 60))
         text_surf = text.render(f'Player 2 ({len(self.player2_cards)})', True, (0, 0, 0))
         game_display.blit(text_surf, (5, height - 20))
 
