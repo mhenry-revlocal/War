@@ -334,10 +334,10 @@ class GameController(object):
         game_display.blit(text_surf, (5, 50))
         text_surf = text_sm.render('r = reset', True, (0, 0, 0))
         game_display.blit(text_surf, (5, 70))
-        if self.speed < 3:
+        if (self.increase_speed and self.increase_speed < 3) or (not self.increase_speed and self.speed < 3):
             text_surf = text_sm.render('up = increase speed', True, (0, 0, 0))
             game_display.blit(text_surf, (5, 90))
-        if self.speed > 1:
+        if (self.increase_speed and self.increase_speed > 1) or (not self.increase_speed and self.speed > 1):
             y = 110
             if self.speed == 3:
                 y = 90
