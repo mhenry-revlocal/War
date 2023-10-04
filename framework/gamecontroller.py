@@ -10,10 +10,10 @@ class GameController(object):
         self.deck_pos =  (display_width - 150, (display_height / 2) - 43)
         self.background_image = pygame.transform.scale(pygame.image.load('images/card_background/background.jpg'), (display_width, display_height))
         self.cardback_image = pygame.transform.scale(pygame.image.load('images/Cards/cardBack_red2.png'), (70, 95))
-        self.player1_deck_pos = (150, 30)
-        self.player2_deck_pos = (150, display_height - 100)
-        self.player1_battle_pos = (150, 140)
-        self.player2_battle_pos = (150, display_height - 100 - 150)
+        self.player1_deck_pos = (180, 30)
+        self.player2_deck_pos = (180, display_height - 100)
+        self.player1_battle_pos = (180, 140)
+        self.player2_battle_pos = (180, display_height - 100 - 150)
         self.increase_speed = None
         self.quit = False
         self.paused = False
