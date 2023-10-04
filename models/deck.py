@@ -1,4 +1,6 @@
-from framework.card import Suits, Cards, Card
+from models.cards import Cards 
+from models.suits import Suits
+from models.card import Card
 import random
 
 class Deck(object):
