@@ -4,10 +4,11 @@ from models.card import Card
 import random
 
 class Deck(object):
+
     def __init__(self):
         self.cards = []
         self.reset()
-        pass
+
     def reset(self):
         self.cards = []
         for suit in Suits:

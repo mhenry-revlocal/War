@@ -5,6 +5,7 @@ class Card(object):
     def __init__(self, suit, card):
         self.suit = suit
         self.card = card
+
         if card == Cards.Jack:
             self.value = 11
         elif card == Cards.Queen:
